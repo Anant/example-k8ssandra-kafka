@@ -2,11 +2,12 @@ const Kafka = require('node-rdkafka')
 const fetch = require("node-fetch")
 
 
-function addData(id,Title,Description,Channel){
-    return fetch(`http://localhost:9200/newnewindex/data/${id}`,{
+function addData(Title,Description,Channel){
+    return fetch(`http://localhost:8082/v2/keyspaces/youtube/Results`,{
         method:`POST`,
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'X-Cassandra-Token' : 'f91350b0-1d5a-4791-82ff-c3330b6b7b78'
         },
         body: JSON.stringify({
             Title,
@@ -25,7 +26,7 @@ consumer.connect();
 
 consumer.on('ready',() =>{
     console.log('Consumer ready')
-    consumer.subscribe(['elassandra'])
+    consumer.subscribe(['k8ssandra'])
     consumer.consume()
 }).on('data', (data) => {
     let stream = data.value
